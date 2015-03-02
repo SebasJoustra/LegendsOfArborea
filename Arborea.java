@@ -46,12 +46,8 @@ class Arborea {
         
     }
     
-    private void addUnits() {
-        
-        
-        
-        
-        
+    private void addUnits() {  
+
         terrain[0][1].add(new Goblin());
         terrain[1][1].add(new Goblin());
         terrain[1][2].add(new Goblin());
@@ -74,9 +70,6 @@ class Arborea {
         terrain[7][5].add(new General());
         terrain[8][0].add(new General());
         terrain[8][3].add(new General());
-        
-
-        
         
         for(int i = 0; i < terrain.length; i++){            
             for(int j = 0; j < terrain[i].length; j++){

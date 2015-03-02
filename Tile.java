@@ -19,6 +19,11 @@ class Tile {
         this.isTaken = true;
     }
     
+    public void remove() {
+        this.unit = null;
+        this.isTaken = false;
+    }
+    
     public Unit getUnit(){
         return unit;
     }
