@@ -1,21 +1,18 @@
 public abstract class Unit {
 
-    int old_x;
-    int old_y;
+    int x;
+    int y;
 
     public Unit(){
-        
+        /*this.x = x;
+        this.y = y;*/
     }
     
     public abstract int getHitpoints();
     public abstract int getTeam();
     public abstract int getWeaponSkill();
     public abstract String getName();
-    
-    public void move(int new_x, int new_y) {
-        
-    }
-    
-    
+    public abstract int getId();
+    public abstract void lowerHitpoints();
     
 }

@@ -27,4 +27,8 @@ class Tile {
     public Unit getUnit(){
         return unit;
     }
+    
+    public String getPosition(){
+        return x_pos + "," + y_pos;
+    }
 }

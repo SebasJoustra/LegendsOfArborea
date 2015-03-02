@@ -4,12 +4,14 @@ class Swordsman extends Unit{
     int weapon_skill;
     int team;
     String name;
+    int id;
     
     public Swordsman(){
         this.team = 0;
         this.hitpoints = 4;
         this.weapon_skill = 6;
         this.name = "Swordsman";
+        this.id = 1;
     }
     
     public int getHitpoints(){
@@ -26,6 +28,14 @@ class Swordsman extends Unit{
     
     public int getWeaponSkill() {
         return this.weapon_skill;
+    }
+    
+    public int getId(){
+        return this.id;
+    }
+    
+    public void lowerHitpoints() {
+        this.hitpoints --;
     }
     
 }

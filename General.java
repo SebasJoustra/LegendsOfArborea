@@ -4,12 +4,14 @@ class General extends Unit{
     int weapon_skill;
     int team;
     String name;
+    int id;
     
     public General(){
         this.team = 0;
         this.hitpoints = 5;
         this.weapon_skill = 8;
         this.name = "General";
+        this.id = 2;
     }
     
     public int getHitpoints(){
@@ -28,4 +30,11 @@ class General extends Unit{
         return this.weapon_skill;
     }
     
+    public int getId(){
+        return this.id;
+    }
+    
+     public void lowerHitpoints() {
+        this.hitpoints --;
+    }
 }

@@ -4,12 +4,14 @@ class Orc extends Unit{
     int weapon_skill;
     int team;
     String name;
+    int id;
     
     public Orc(){
         this.team = 1;
         this.hitpoints = 10;
         this.weapon_skill = 8;
         this.name = "Orc";
+        this.id = 4;
     }
     
     public int getHitpoints(){
@@ -26,6 +28,14 @@ class Orc extends Unit{
     
     public int getWeaponSkill() {
         return this.weapon_skill;
+    }
+    
+    public int getId(){
+        return this.id;
+    }
+    
+     public void lowerHitpoints() {
+        this.hitpoints --;
     }
     
 }
