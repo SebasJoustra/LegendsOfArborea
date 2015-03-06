@@ -1,9 +1,12 @@
+import java.util.*;
+
 class Tile {
     
     int x_pos;
     int y_pos;
     boolean isTaken;
     Unit unit;
+    List<Tile> neighbours = new ArrayList<Tile>();
     
     public Tile(int x_pos, int y_pos){
         this.x_pos = x_pos;
@@ -30,5 +33,13 @@ class Tile {
     
     public String getPosition(){
         return x_pos + "," + y_pos;
+    }
+    
+    public void addNeighbours(Tile tile) {
+        neighbours.add(tile);
+    }
+    
+    public List getNeighbours() {
+        return neighbours;
     }
 }

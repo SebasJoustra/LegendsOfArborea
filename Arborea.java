@@ -27,7 +27,6 @@ class Arborea {
         while(true) {
             game.userTurns();
             //game.AiTurns();
-            game.printTerrain();
         }
     }
     
@@ -53,6 +52,31 @@ class Arborea {
                 terrain[j][i] = new Tile(j, i);
             }
         }
+        
+        tilesInColumn = 5;
+        for(int i=0; i < 5; i++) {
+            for(int j=0; j<tilesInColumn; j++) {
+                addNeighbours(j, i);
+            }
+            tilesInColumn++;
+        }
+        
+        List<Tile> neighbours = terrain[8][8].getNeighbours();
+        for(Tile item : neighbours) {
+            System.out.println(item.getUnit());
+        }
+        
+    }
+    
+    private void addNeighbours(int x, int y) {
+            if(x<8 && terrain[x+1][y] != null) terrain[x][y].addNeighbours(terrain[x+1][y]);
+            if(x>0 && terrain[x-1][y] != null) terrain[x][y].addNeighbours(terrain[x-1][y]);
+            if(y>0 && terrain[x][y-1] != null) terrain[x][y].addNeighbours(terrain[x][y-1]);
+            if(y<8 && terrain[x][y+1] != null) terrain[x][y].addNeighbours(terrain[x][y+1]);
+            if(x<8 && y<8 && terrain[x+1][y+1] != null) 
+                terrain[x][y].addNeighbours(terrain[x+1][y+1]);
+            if(x>0 && y>0 && terrain[x-1][y-1] != null) 
+                terrain[x][y].addNeighbours(terrain[x-1][y-1]);
     }
     
     private void printTerrain(){
@@ -74,7 +98,7 @@ class Arborea {
     
     private void addUnits() {  
 
-        terrain[1][0].add(new Goblin());
+        terrain[1][0].add(new Goblin());       
         terrain[1][1].add(new Goblin());
         terrain[2][1].add(new Goblin());
         terrain[3][1].add(new Goblin());
@@ -165,14 +189,18 @@ class Arborea {
             System.out.print("to y: ");
             int y2 = Integer.parseInt(in.next());
             
-            if(game.legalMove(x1, y1, x2, y2)){
-                game.move(x1, y1, x2, y2);
-                game.printTerrain();
-            } else {
-                System.out.println("not a legal move, try again");
-                turns++;
+            try{
+                if(game.legalMove(x1, y1, x2, y2) && terrain[x1][y1].getUnit().getTeam()==0){
+                    game.move(x1, y1, x2, y2);
+                    game.printTerrain();
+                    turns--;
+                } else {
+                    System.out.println("not a legal move, try again");
+                }
+            } catch(NullPointerException e) {
+                System.out.println("There is no unit at this spot");
             }
-            turns--;
+            
         }
     }
     
@@ -194,7 +222,8 @@ class Arborea {
         }
     }
     /*private void AiTurns() {
-        
+        Ai ai = new Ai(terrain);
+        ai.checkAvailableMoves();
     }*/
 
     
