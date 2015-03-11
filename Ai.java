@@ -10,15 +10,17 @@ class Ai {
     
     public Tile getRandomTile() {
         int idx = new Random().nextInt(own_tiles.size());
-        Tile randomTile = own_tiles.get(idx);
-        return randomTile;
+        return own_tiles.get(idx);
     }
-    
-    public void moveRandomTile() {
-        int idx = new Random().nextInt(own_tiles.size());
-        Tile randomTile = own_tiles.get(idx);
-        
-        List<Tile> neighbours = randomTile.getNeighbours();
+
+    public Tile getRandomNeighbour(Tile randomTile) {
+        List<Tile> neighbours = randomTile.getMoveableNeighbours();
+        if(neighbours.size() == 0) {
+            return null;
+        } else {
+            int idx = new Random().nextInt(neighbours.size());
+            return neighbours.get(idx);
+        }
     }
 
 }
