@@ -42,4 +42,11 @@ class Tile {
     public List getNeighbours() {
         return neighbours;
     }
+    
+    public boolean neighbourAvailable(Tile tile) {
+        if(neighbours.contains(tile)){
+            return true;
+        }
+        else return false;
+    }
 }

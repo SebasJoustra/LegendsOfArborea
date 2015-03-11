@@ -14,6 +14,8 @@ class Arborea {
     private static Arborea game;
     private Random rand = new Random();
     private int turns;
+    private List<Tile> team_ai = new ArrayList<Tile>();
+    private List<Tile> team_user = new ArrayList<Tile>();
     
     public static void main(String[] args) {
                 
@@ -25,8 +27,8 @@ class Arborea {
         game.printTerrain();
         
         while(true) {
-            game.userTurns();
-            //game.AiTurns();
+            //game.userTurns();
+            game.AiTurns();
         }
     }
     
@@ -35,6 +37,8 @@ class Arborea {
     }
     
     private void createTerrain() {
+        
+        /* Loop that creates the initial terrain */
         terrain = new Tile[9][9];
         int tilesInColumn = 5;
         for(int i=0; i < 5; i++) {
@@ -53,6 +57,7 @@ class Arborea {
             }
         }
         
+        /* Loop that adds the neighbour tiles */
         tilesInColumn = 5;
         for(int i=0; i < 5; i++) {
             for(int j=0; j<tilesInColumn; j++) {
@@ -61,22 +66,43 @@ class Arborea {
             tilesInColumn++;
         }
         
-        List<Tile> neighbours = terrain[8][8].getNeighbours();
-        for(Tile item : neighbours) {
-            System.out.println(item.getUnit());
-        }
+        tilesInColumn--;
         
+        for(int i=5; i < 9; i++) {
+            tilesInColumn--;
+            for(int j=0; j<tilesInColumn; j++) {
+                addNeighbours(j, i);
+            }
+        }
     }
     
     private void addNeighbours(int x, int y) {
-            if(x<8 && terrain[x+1][y] != null) terrain[x][y].addNeighbours(terrain[x+1][y]);
-            if(x>0 && terrain[x-1][y] != null) terrain[x][y].addNeighbours(terrain[x-1][y]);
-            if(y>0 && terrain[x][y-1] != null) terrain[x][y].addNeighbours(terrain[x][y-1]);
-            if(y<8 && terrain[x][y+1] != null) terrain[x][y].addNeighbours(terrain[x][y+1]);
-            if(x<8 && y<8 && terrain[x+1][y+1] != null) 
-                terrain[x][y].addNeighbours(terrain[x+1][y+1]);
-            if(x>0 && y>0 && terrain[x-1][y-1] != null) 
-                terrain[x][y].addNeighbours(terrain[x-1][y-1]);
+            if(y<4) {
+                terrain[x][y].addNeighbours(terrain[x][y+1]);
+                terrain[x][y].addNeighbours(terrain[x+1][y+1]); 
+                if(x>0) terrain[x][y].addNeighbours(terrain[x-1][y]);
+                if(terrain[x+1][y] != null) terrain[x][y].addNeighbours(terrain[x+1][y]);
+                if(y>0 && terrain[x][y-1] != null) terrain[x][y].addNeighbours(terrain[x][y-1]);                
+                if(x>0 && y>0) terrain[x][y].addNeighbours(terrain[x-1][y-1]);              
+            }
+            if(y==4) {
+                if(x>0) terrain[x][y].addNeighbours(terrain[x-1][y]);
+                if(x>0) terrain[x][y].addNeighbours(terrain[x-1][y-1]);
+                if(x>0) terrain[x][y].addNeighbours(terrain[x-1][y+1]);
+                if(x<8) terrain[x][y].addNeighbours(terrain[x+1][y]);
+                if(terrain[x][y-1] != null) terrain[x][y].addNeighbours(terrain[x][y-1]);
+                if(terrain[x][y+1] != null) terrain[x][y].addNeighbours(terrain[x][y+1]);
+            }
+            if(y>4) {
+                terrain[x][y].addNeighbours(terrain[x][y-1]);
+                terrain[x][y].addNeighbours(terrain[x+1][y-1]);
+                if(terrain[x+1][y] != null) terrain[x][y].addNeighbours(terrain[x+1][y]);
+                if(x>0) terrain[x][y].addNeighbours(terrain[x-1][y]);
+                if(x>0 && y<8) terrain[x][y].addNeighbours(terrain[x-1][y+1]);
+                if(y<8) terrain[x][y].addNeighbours(terrain[x][y+1]);                 
+            }
+            
+            
     }
     
     private void printTerrain(){
@@ -96,32 +122,47 @@ class Arborea {
         }
     }
     
-    private void addUnits() {  
-
-        terrain[1][0].add(new Goblin());       
-        terrain[1][1].add(new Goblin());
-        terrain[2][1].add(new Goblin());
-        terrain[3][1].add(new Goblin());
-        terrain[4][1].add(new Goblin());
-        terrain[5][1].add(new Goblin());
-        terrain[1][2].add(new Goblin());
-        terrain[6][2].add(new Goblin());
+    private void addUnits() {
         
+        for(int i = 1; i<6; i++) {
+            terrain[i][1].add(new Goblin());
+            team_ai.add(terrain[i][1]);
+        }
+        terrain[1][0].add(new Goblin());
+        terrain[1][2].add(new Goblin());        
+        terrain[6][2].add(new Goblin());        
         terrain[4][0].add(new Orc());
         terrain[0][1].add(new Orc());
         
-        terrain[0][7].add(new Swordsman());
-        terrain[1][7].add(new Swordsman());
-        terrain[2][7].add(new Swordsman());
-        terrain[3][7].add(new Swordsman());
-        terrain[4][7].add(new Swordsman());
+        team_ai.add(terrain[1][0]);
+        team_ai.add(terrain[0][1]);
+        team_ai.add(terrain[1][2]);
+        team_ai.add(terrain[6][2]);
+        team_ai.add(terrain[4][0]);
+        
+        for(int i = 0; i<6; i++) {
+            terrain[i][7].add(new Swordsman());
+        }
         terrain[1][8].add(new Swordsman());
         
         terrain[5][7].add(new General());
         terrain[0][8].add(new General());
         terrain[3][8].add(new General());
         
-        terrain[0][6].add(new Goblin());
+        for(Tile item : team_ai) {
+                System.out.println(item.getPosition());
+        }
+        
+        //terrain[0][6].add(new Goblin());
+        
+        /*List<Tile> neighbours = terrain[2][6].getNeighbours();
+        for(Tile item : neighbours) {
+            try{
+                System.out.println(item.getPosition());
+            } catch(NullPointerException e) {
+                
+            }
+        }*/
     }
     
     private void move(int old_x, int old_y, int new_x, int new_y) {
@@ -189,8 +230,10 @@ class Arborea {
             System.out.print("to y: ");
             int y2 = Integer.parseInt(in.next());
             
+            Tile userTile = terrain[x1][y1];
+            
             try{
-                if(game.legalMove(x1, y1, x2, y2) && terrain[x1][y1].getUnit().getTeam()==0){
+                if(userTile.neighbourAvailable(terrain[x2][y2]) && userTile.getUnit().getTeam()==0){
                     game.move(x1, y1, x2, y2);
                     game.printTerrain();
                     turns--;
@@ -221,10 +264,10 @@ class Arborea {
             return false;
         }
     }
-    /*private void AiTurns() {
-        Ai ai = new Ai(terrain);
-        ai.checkAvailableMoves();
-    }*/
+    private void AiTurns() {
+        Ai ai = new Ai(team_ai);
+        System.out.println(ai.moveRandomTile());
+    }
 
     
 
