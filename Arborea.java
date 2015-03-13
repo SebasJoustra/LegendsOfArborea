@@ -33,7 +33,7 @@ class Arborea {
             game.aiTurns();
             game.printTerrain();
             try {
-                Thread.sleep(500);
+                Thread.sleep(200);
             } catch (Exception e) {
               System.out.println(e);
             }
@@ -45,8 +45,8 @@ class Arborea {
     }
 
     private void test() {
-        System.out.println("Adjency:");
-        System.out.println(terrain[0][7].getAdjency());
+        System.out.println("Adjecency:");
+        System.out.println(terrain[0][7].getAdjecency());
     }
     
     private void createTerrain() {
@@ -89,6 +89,7 @@ class Arborea {
         }
     }
     
+    /* Add all available neighbours to every tile on the board */
     private void addNeighbours(int x, int y) {
             if(y<4) {
                 terrain[x][y].addNeighbours(terrain[x][y+1]);
@@ -135,6 +136,7 @@ class Arborea {
         }
     }
     
+    /* Manually adds the units to the board */
     private void addUnits() {
         
         for(int i = 1; i<6; i++) {
@@ -165,6 +167,7 @@ class Arborea {
         terrain[0][6].add(new Goblin());
     }
     
+    /* This gives the command to move (or attack) a unit from one tile to another */
     private void move(int old_x, int old_y, int new_x, int new_y) {
         
         Tile oldTile = terrain[old_x][old_y];
@@ -191,17 +194,18 @@ class Arborea {
         }
     }
     
+    /* Attacks if a unit is on that tile already */
     private void attack(Tile att_tile, Tile def_tile) {
         double d = Math.random();
         Unit attacker = att_tile.getUnit();
         Unit defender = def_tile.getUnit();
         
-        int aws = attacker.getWeaponSkill() + att_tile.getAdjency();
-        int dws = defender.getWeaponSkill() + def_tile.getAdjency();
+        int aws = attacker.getWeaponSkill() + att_tile.getAdjecency();
+        int dws = defender.getWeaponSkill() + def_tile.getAdjecency();
         System.out.println(aws + "  "+ dws);
         
-        //hitChance = 1/(1+e^-0.4(aws-dws));
-        double hitChance = 0.9;
+        double hitChance = 1/(1+Math.exp(-0.4*(aws-dws)));
+        System.out.println(hitChance);
         if(d < hitChance){
             defender.lowerHitpoints();
             System.out.print("You hit!, new hitpoints: ");
@@ -218,12 +222,8 @@ class Arborea {
         }
     }
     
-    /*private boolean checkAdjency() {
-        
-    }*/
-    
     private void userTurns() {
-        turns = 1;
+        turns = 2;
         while(turns > 0){
             System.out.println(turns + " turns left");
             Scanner in = new Scanner(System.in);

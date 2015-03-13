@@ -51,26 +51,27 @@ class Tile {
         return neighbours;
     }
 
-    public int getAdjency() {
-        int adjency = 0;
+    /* Returns the adjecency bonus, depending of the units surrounding the unit */
+    public int getAdjecency() {
+        int adjecency = 0;
         for(Tile tile : neighbours) {
             if(tile.isTaken()) {
                 if(tile.getUnit().getTeam() == this.getUnit().getTeam()) {
                     if(tile.getUnit().getId() == 2) {
-                        adjency = adjency + 2;
+                        adjecency = adjecency + 2;
                     } else {
-                        adjency++;
+                        adjecency++;
                     }
                 } else {
                     if(tile.getUnit().getId() == 2) {
-                        adjency = adjency - 2;
+                        adjecency = adjecency - 2;
                     } else {
-                        adjency--;
+                        adjecency--;
                     }
                 }
             }
         }
-        return adjency;
+        return adjecency;
     }
     
     /* Checks whether a given tile is a neighbour of this tile */
