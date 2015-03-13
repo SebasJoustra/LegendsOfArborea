@@ -2,10 +2,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-
-
-
-
 public class Main extends JPanel {
 	
 	public void paintComponent(Graphics g) {
@@ -17,10 +13,6 @@ public class Main extends JPanel {
 	
 	int tile_height = 46;
 	int tile_width = 68;
-	
-	
-	
-	
 	
 	int count = 5;
 	
@@ -48,7 +40,45 @@ public class Main extends JPanel {
 			createHexagon(g, x, y);
 		}
 	}
+	
+	int x_pos = 6;
+	int y_pos = 6;
+	
+	createUnit(g, x_pos, y_pos);
+	
+	// row, column
+	
+	
 }
+	
+	public void createUnit(Graphics g, int x_pos, int y_pos) {
+		int tile_height = 46;
+		int tile_width = 68;
+		
+		int x = 0;
+		int y = 0;
+		
+		
+		if (x_pos < 5) {
+			x = 12 + x_pos*tile_width ;
+			y = 78 - (x_pos*tile_height/2) + (y_pos*tile_height);
+		} else {
+			x = 12 + x_pos*tile_width ;
+			y = 78 - (69) + ((x_pos-5)*tile_height/2) + (y_pos*tile_height);
+		}
+		
+		
+		
+		ImageIcon goblin = new ImageIcon("goblin.png");
+		goblin.paintIcon(this, g, x, y);
+		
+		
+		
+		//goblin.paintIcon(null, g, x, y);
+		
+		//goblin.paintIcon(this, g, 100, 100);
+	}
+	
 	
 	
 	public void createHexagon(Graphics g, double x_start, double y_start) {
@@ -66,7 +96,7 @@ public class Main extends JPanel {
 	
    public static void main(String[] args) {
 	JFrame frame = new JFrame();
-    frame.setTitle("Hexagon Tiles");
+    frame.setTitle("Legends Of Arborea");
     frame.setSize(649, 477);
     frame.addWindowListener(new WindowAdapter() {
 		public void windowClosing(WindowEvent e) {
