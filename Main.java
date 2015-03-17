@@ -2,6 +2,17 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Toolkit;
+
+import java.util.*;
+import java.io.*;
+
+
+
+
 public class Main extends JPanel {
 	
 	public void paintComponent(Graphics g) {
@@ -46,7 +57,27 @@ public class Main extends JPanel {
 	
 	createUnit(g, x_pos, y_pos);
 	
-	// row, column
+	
+
+	
+	Scanner in = new Scanner(System.in);
+	int test = Integer.parseInt(in.next());
+	
+	if( test == 1) {
+		x_pos = 7;
+		y_pos = 7;
+		createUnit(g, x_pos, y_pos);
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }
@@ -67,16 +98,31 @@ public class Main extends JPanel {
 			y = 78 - (69) + ((x_pos-5)*tile_height/2) + (y_pos*tile_height);
 		}
 		
+		Graphics2D g2 = (Graphics2D) g;
+
+		Image img1 = Toolkit.getDefaultToolkit().getImage("goblin.png");
+		g2.drawImage(img1, x, y, this);
 		
 		
-		ImageIcon goblin = new ImageIcon("goblin.png");
-		goblin.paintIcon(this, g, x, y);
+		
+		
+		
+		
+		
+		
+		//ImageIcon goblin = new ImageIcon("goblin.png");
+		//goblin.paintIcon(this, g, x, y);
 		
 		
 		
 		//goblin.paintIcon(null, g, x, y);
 		
 		//goblin.paintIcon(this, g, 100, 100);
+		
+		
+		
+		
+		
 	}
 	
 	
