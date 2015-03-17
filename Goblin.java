@@ -4,7 +4,7 @@ class Goblin extends Unit{
     int weapon_skill;
     int team;
     String name;
-    int id;
+    int id;    
     
     public Goblin(){
         this.team = 1;
@@ -34,8 +34,12 @@ class Goblin extends Unit{
         return this.id;
     }
     
-     public void lowerHitpoints() {
+    public void lowerHitpoints() {
         this.hitpoints --;
+    }
+    
+    public String getFilename() {
+        return this.name + ".png";
     }
     
 }

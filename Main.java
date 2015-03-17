@@ -55,7 +55,7 @@ public class Main extends JPanel {
 		int x = (int) x_start;
 		int y = (int) y_start;
 		
-		ImageIcon h = new ImageIcon("C:\\Users\\Joeri Bes\\Desktop\\Datastructuren\\Legends Of Arborea\\tile.png");
+		ImageIcon h = new ImageIcon("tile.png");
 		h.paintIcon(this, g, x, y);
 	}
 	
