@@ -13,9 +13,10 @@ class Arborea {
     private static Tile[][] terrain;
     private static Arborea game;
     private Random rand = new Random();
-    private int turns;
+    private static int INITIAL_TURNS = 2;
     private List<Tile> team_ai = new ArrayList<Tile>();
     private List<Tile> team_user = new ArrayList<Tile>();
+    private Ai ai;
     
     public static void main(String[] args) {
                 
@@ -24,29 +25,29 @@ class Arborea {
         game.createTerrain();
         game.addUnits();
         
-        game.printTerrain();
-        game.test();
+        
         
         while(true) {
-            game.userTurns();
-            game.printTerrain();
-            game.aiTurns();
-            game.printTerrain();
+            /*for(int i=INITIAL_TURNS; i>0; i--) {
+                game.printTerrain();
+                game.userTurns(i);
+            }*/
+            
+            for(int i=INITIAL_TURNS; i>0; i--) {
+                game.printTerrain();
+                game.aiTurns();
+            }
+            
             try {
-                Thread.sleep(200);
+                Thread.sleep(100);
             } catch (Exception e) {
-              System.out.println(e);
+                System.out.println(e);
             }
         }
     }
     
     public Arborea() {
         
-    }
-
-    private void test() {
-        System.out.println("Adjecency:");
-        System.out.println(terrain[0][7].getAdjecency());
     }
     
     private void createTerrain() {
@@ -148,23 +149,30 @@ class Arborea {
         terrain[6][2].add(new Goblin());        
         terrain[4][0].add(new Orc());
         terrain[0][1].add(new Orc());
+        terrain[0][6].add(new Goblin());
         
         team_ai.add(terrain[1][0]);
         team_ai.add(terrain[0][1]);
         team_ai.add(terrain[1][2]);
         team_ai.add(terrain[6][2]);
         team_ai.add(terrain[4][0]);
+        team_ai.add(terrain[0][6]);
         
-        for(int i = 0; i<6; i++) {
+        for(int i = 0; i<5; i++) {
             terrain[i][7].add(new Swordsman());
+            team_user.add(terrain[i][7]);
         }
-        terrain[1][8].add(new Swordsman());
-        
+        terrain[1][8].add(new Swordsman());        
         terrain[5][7].add(new General());
         terrain[0][8].add(new General());
-        terrain[3][8].add(new General());
+        terrain[3][8].add(new General());        
         
-        terrain[0][6].add(new Goblin());
+        
+        team_user.add(terrain[1][8]);
+        team_user.add(terrain[5][7]);
+        team_user.add(terrain[0][8]);
+        team_user.add(terrain[3][8]);
+         
     }
     
     /* This gives the command to move (or attack) a unit from one tile to another */
@@ -178,34 +186,37 @@ class Arborea {
         if(newTile.isTaken()){
             Unit otherUnit = newTile.getUnit(); 
             if(unit.getTeam() != otherUnit.getTeam()) { 
-                game.attack(oldTile, newTile); // Units are from the other team
+                game.attack(oldTile, newTile); // Units are from the other team, attack
             } else {
                 System.out.println("this tile is already taken by your team!");
-                turns++;
+                userTurns(2);
             }
         } else {
-            if(unit.getTeam() == 1){    // a unit of team AI moved, replace in list
+            // a unit of either team AI or team user moved succesfully, replace in list.
+            if(unit.getTeam() == 1){
                 team_ai.remove(oldTile);   
                 team_ai.add(newTile);
+            } else {
+                team_user.remove(oldTile);
+                team_user.add(newTile);
             }
+            
+            // add the unit to a different tile
             oldTile.remove();
             newTile.add(unit);
 
         }
     }
+
+
     
     /* Attacks if a unit is on that tile already */
     private void attack(Tile att_tile, Tile def_tile) {
         double d = Math.random();
-        Unit attacker = att_tile.getUnit();
+        double hitChance = getHitChance(att_tile, def_tile);
         Unit defender = def_tile.getUnit();
-        
-        int aws = attacker.getWeaponSkill() + att_tile.getAdjecency();
-        int dws = defender.getWeaponSkill() + def_tile.getAdjecency();
-        System.out.println(aws + "  "+ dws);
-        
-        double hitChance = 1/(1+Math.exp(-0.4*(aws-dws)));
         System.out.println(hitChance);
+
         if(d < hitChance){
             defender.lowerHitpoints();
             System.out.print("You hit!, new hitpoints: ");
@@ -214,6 +225,8 @@ class Arborea {
             if(defender.getHitpoints()==0) {
                 if(def_tile.getUnit().getTeam() == 1){    // a unit of team AI died, remove from list
                     team_ai.remove(def_tile);
+                } else {
+                    team_user.remove(def_tile);
                 }
                 def_tile.remove();
             }
@@ -221,59 +234,60 @@ class Arborea {
             System.out.println("You missed");
         }
     }
+
+    public double getHitChance(Tile att_tile, Tile def_tile) {
+        int aws = att_tile.getUnit().getWeaponSkill() + att_tile.getAdjecency();
+        int dws = def_tile.getUnit().getWeaponSkill() + def_tile.getAdjecency();
+        
+        return 1/(1+Math.exp(-0.4*(aws-dws)));
+    }
     
-    private void userTurns() {
-        turns = 2;
-        while(turns > 0){
-            System.out.println(turns + " turns left");
-            Scanner in = new Scanner(System.in);
-            System.out.println("Your turn, from which x,y do you want to move?");
-            System.out.print("from x: ");
-            int x1 = Integer.parseInt(in.next());
-            System.out.print("from y: ");
-            int y1 = Integer.parseInt(in.next());
-            
-            System.out.println("where do you want to move to?");
-            System.out.print("to x: ");
-            int x2 = Integer.parseInt(in.next());
-            System.out.print("to y: ");
-            int y2 = Integer.parseInt(in.next());
-            
-            Tile userTile = terrain[x1][y1];
-            
-            try{
-                if(userTile.neighbourAvailable(terrain[x2][y2]) && userTile.getUnit().getTeam()==0){
-                    game.move(x1, y1, x2, y2);
-                    game.printTerrain();
-                    turns--;
-                } else {
-                    System.out.println("not a legal move, try again");
-                }
-            } catch(NullPointerException e) {
-                System.out.println("There is no unit at this spot");
+    private void userTurns(int turns) {
+        System.out.println(turns + " turns left");
+        Scanner in = new Scanner(System.in);
+        System.out.println("Your turn, from which x,y do you want to move?");
+        System.out.print("from x: ");
+        int x1 = Integer.parseInt(in.next());
+        System.out.print("from y: ");
+        int y1 = Integer.parseInt(in.next());
+        
+        System.out.println("where do you want to move to?");
+        System.out.print("to x: ");
+        int x2 = Integer.parseInt(in.next());
+        System.out.print("to y: ");
+        int y2 = Integer.parseInt(in.next());
+        
+        Tile userTile = terrain[x1][y1];
+        
+        try{
+            if(userTile.neighbourAvailable(terrain[x2][y2]) && userTile.getUnit().getTeam()==0){
+                game.move(x1, y1, x2, y2);
+            } else {
+                System.out.println("not a legal move, try again");
+                userTurns(turns);
             }
-            
+        } catch(NullPointerException e) {
+            System.out.println("There is no friendly unit at the start spot, try again");
+            userTurns(turns);
         }
     }
 
     private void aiTurns() {
-        Ai ai = new Ai(team_ai);
-        Tile randomTile = ai.getRandomTile();
-        System.out.println(randomTile.getPosition());
+        ai = new Ai(team_ai, team_user);
 
-        Tile randomNeighbour = ai.getRandomNeighbour(randomTile);
-        System.out.println(randomNeighbour.getPosition());
+        System.out.println();
+        Tile startTile = ai.getStartTile();
+        System.out.print("Moving from " + startTile.getPosition());
+        Tile goalTile = ai.getGoalTile();
+        System.out.print(" to " + goalTile.getPosition());
+        Tile nextTile = ai.findMove(startTile, goalTile);
+        System.out.println(" by moving first to tile " + nextTile.getPosition()); 
+        
 
-        while(randomNeighbour == null) {
-            randomTile = ai.getRandomTile();
-            System.out.println(randomTile.getPosition());
-            randomNeighbour = ai.getRandomNeighbour(randomTile);
-            System.out.println(randomNeighbour.getPosition());
-        }
-
-        game.move(randomTile.get_x(), randomTile.get_y(), 
-            randomNeighbour.get_x(), randomNeighbour.get_y());
+        game.move(startTile.get_x(), startTile.get_y(), nextTile.get_x(), nextTile.get_y());
     }
+
+
 
     
 

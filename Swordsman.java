@@ -38,4 +38,8 @@ class Swordsman extends Unit{
         this.hitpoints --;
     }
     
+    public String getFilename() {
+        return this.name + ".png";
+    }
+    
 }

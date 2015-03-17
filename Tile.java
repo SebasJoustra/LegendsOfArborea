@@ -96,4 +96,16 @@ class Tile {
         }
         return moveableNeighbours;
     }
+
+    public boolean hasEnemyNeighbour(Tile startTile) {
+        List<Tile> moveableNeighbours = this.getMoveableNeighbours();
+        for(Tile tile : neighbours) {
+            if(tile.isTaken()) {
+                if(tile.getUnit().getTeam() != startTile.getUnit().getTeam()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

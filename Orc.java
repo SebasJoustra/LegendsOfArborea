@@ -34,8 +34,12 @@ class Orc extends Unit{
         return this.id;
     }
     
-     public void lowerHitpoints() {
+    public void lowerHitpoints() {
         this.hitpoints --;
+    }
+    
+    public String getFilename() {
+        return this.name + ".png";
     }
     
 }
